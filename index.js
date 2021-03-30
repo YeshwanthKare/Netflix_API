@@ -4,9 +4,12 @@ const port = 3000;
 const mongoose = require('mongoose');
 const dotenv = require("dotenv").config()
 const { Schema } = mongoose;
-
+const cors = require('cors');
 
 app.use(express.json());
+
+app.use(express.static('models'))
+
 
 mongoose.connect(process.env.dbURI, {
   useNewUrlParser: true,
@@ -39,6 +42,11 @@ const User = mongoose.model('Users', new Schema(
         }
     }
 ))
+
+
+app.use(cors());
+
+
 
 
 app.get('/', (req, res) => {
@@ -77,9 +85,7 @@ app.post('/login', (req, res) => {
             })
             console.log(user)
         }else{
-            res.send(404,{
-                status: "Not Found"
-            })
+            res.status(404).send('Not Found')
             console.log(err);
         }
     })

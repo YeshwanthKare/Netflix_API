@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>Registration Form</h1>
+
+    <form id="reg-form">
+        <input type="text" autocomplete="off" id='username' name="username" placeholder="Username"/>
+        <input type="text" autocomplete="off" id='email' name="email" placeholder="Email"/>
+        <input type="password" autocomplete="off" id='password' name="password" placeholder="Password"/>
+        <input type="submit" value="Submit">
+    </form>
+    <script>
+
+        const form = document.getElementById('reg-form')
+        form.addEventListener('submit', userRegistration);
+
+        async function userRegistration(event) {
+            event.preventDefault();
+
+            let username = document.getElementById('username').value;
+            let password = document.getElementById('password').value;
+            let email = document.getElementById('email').value;
+
+            axios.post('/register', {
+                
+                username,
+                email,
+                password
+                
+            })
+            .then((res) => {
+                console.log(res.data)
+
+            })
+            
+
+            console.log(username);
+        
+            
+        }
+        
+    
+    </script>
+
+</body>
+</html>
