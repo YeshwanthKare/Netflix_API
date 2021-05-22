@@ -106,9 +106,9 @@ app.post('/login', (req, res) => {
     // }
 })
 
-// const PORT = process.env.PORT
+const PORT = process.env.PORT
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
     console.log(`App listening to http://localhost:3000`)
 })
 
