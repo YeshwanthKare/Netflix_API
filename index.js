@@ -76,6 +76,16 @@ app.post('/register', (req, res) => {
     })
 })
 
+app.get("/register", async(req, res) => {
+    User.find({}, (err, user) => {
+        if(err){
+            res.send(err)
+        }else {
+            res.send(user)
+        }
+    })
+})
+
 
 app.post('/login', (req, res) => {
     const password = req.body.password;
