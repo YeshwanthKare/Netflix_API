@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+// const port = 3000;
 const mongoose = require('mongoose');
 const dotenv = require("dotenv").config()
 const { Schema } = mongoose;
@@ -18,9 +18,9 @@ mongoose.connect(process.env.dbURI, {
   useCreateIndex: true
 })
 .then((res) => {
-    app.listen(port, () => {
-        console.log(`Listening to http://localhost:${port}`);
-    })
+    // app.listen(port, () => {
+    //     console.log(`Listening to http://localhost:${port}`);
+    // })
     console.log('DB connected')
 })
 .catch((err) => {
@@ -67,7 +67,9 @@ app.post('/register', (req, res) => {
                 status: err
             })
         }else{
-            res.send("registered")
+            res.send({
+                status: "registered"
+            })
         }
         console.log('all is good')
         console.log(user);
@@ -102,5 +104,11 @@ app.post('/login', (req, res) => {
     // }else {
     //     res.status(404).send('Not found');
     // }
+})
+
+// const PORT = process.env.PORT
+
+app.listen(3000, () => {
+    console.log(`App listening to http://localhost:3000`)
 })
 
