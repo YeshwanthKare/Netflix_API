@@ -1,5 +1,5 @@
 let form = document.getElementById("registerForm");
-let apiUrl = `https://yesh-netflix-api.herokuapp.com/`
+let apiUrl = `http://localhost:3000/`
 
 // https://yesh-netflix-api.herokuapp.com/
 
