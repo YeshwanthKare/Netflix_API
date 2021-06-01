@@ -7,8 +7,6 @@ const { Schema } = mongoose;
 const cors = require('cors');
 
 app.use(express.json());
-
-app.use(express.static('models'))
 app.use(express.static("public"))
 
 
