@@ -9,7 +9,7 @@ const cors = require('cors');
 
 app.use(express.json());
 app.use(cors());
-app.use(express.static("public"))
+app.use("/",express.static("public"))
 
 
 mongoose.connect(process.env.dbURI, {
@@ -63,10 +63,6 @@ function authenticateToken(req, res, next){
 })
 }
 
-
-app.get('/', (req, res) => {
-    res.send('Hello World');
-})
 
 app.get('/wishlist', authenticateToken, (req, res) => {
     console.log('I am authenticated')
