@@ -3,6 +3,7 @@ const app = express();
 // const port = 3000;
 const mongoose = require('mongoose');
 const dotenv = require("dotenv").config()
+const jwt = require('jsonwebtoken');
 const { Schema } = mongoose;
 const cors = require('cors');
 
@@ -45,11 +46,38 @@ const User = mongoose.model('Users', new Schema(
 
 app.use(cors());
 
+function authenticateToken(req, res, next){
+    const authHeaderToken = req.headers['authorization']
 
+    if(!authHeaderToken) return res.sendStatus(401)
+
+    jwt.verify(authHeaderToken, process.env.TOKEN_SECRET, (err, user) => {
+    console.log(err)
+
+    if (err) return res.sendStatus(403)
+
+    req.user = user
+    // console.log(user)
+
+    next()
+})
+}
 
 
 app.get('/', (req, res) => {
     res.send('Hello World');
+})
+
+app.get('/wishlist', authenticateToken, (req, res) => {
+    console.log('I am authenticated')
+    console.log(req.user)
+    res.send({
+        items: [
+            "God Father",
+            "Titanic",
+            "Game of thrones"
+        ]
+    });
 })
 
 
@@ -85,17 +113,27 @@ app.get("/register", async(req, res) => {
     })
 })
 
+function generateAccessToken(user){
+    const payload = {
+        id: user.id,
+        name:user.name
+    }
+    return jwt.sign(payload, process.env.TOKEN_SECRET, { expiresIn: '7200s' })
+}
+
 
 app.post('/login', (req, res) => {
     const password = req.body.password;
     const email = req.body.email;
     User.findOne({ email: email, password: password }, (err, user) => {
         if(user){
+            const token = generateAccessToken(user)
+            console.log("token:",token)
             res.send({
                 status: "valid",
-                token: user.id
+                token: token
             })
-            console.log(user)
+            // console.log(user)
         }else{
             res.status(404).send('Not Found')
             console.log(err);
