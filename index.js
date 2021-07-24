@@ -53,7 +53,21 @@ const User = mongoose.model('Users', new Schema(
     }
 ))
 
+const wishListSchema = new Schema(
+    {
+        user: { 
+            type: Schema.Types.ObjectId, 
+            ref: 'Users'
+        },
+        movieId: Number,
+        backdrop_path: String,
+        title: String
+    }
+)
 
+wishListSchema.index({ user: 1, movieId: 1 }, { unique: true })
+
+const Wishlist = mongoose.model('Wishlist', wishListSchema)
 
 function authenticateToken(req, res, next){
     const authHeaderToken = req.headers['authorization']
@@ -61,29 +75,57 @@ function authenticateToken(req, res, next){
     if(!authHeaderToken) return res.sendStatus(401)
 
     jwt.verify(authHeaderToken, process.env.TOKEN_SECRET, (err, user) => {
-    console.log(err)
-
     if (err) return res.sendStatus(403)
 
     req.user = user
-    // console.log(user)
+    console.log(user)
 
     next()
 })
 }
 
+app.post('/wishlist', authenticateToken, (req, res) => {
+    
+    const newWishListItem = new Wishlist({
+        user: req.user.id,
+        movieId: req.body.movieId,
+        backdrop_path: req.body.backdrop_path,
+        title: req.body.title
+    }) 
+
+    console.log(newWishListItem)
+
+
+    newWishListItem.save((err, wishList) => {
+        if(err){
+            res.send(400,{
+                status: err
+            })
+        }else{
+            res.send({
+                wishList: wishList,
+                status: "WishList Saved"
+            })
+        }
+    })
+})
+
 
 app.get('/wishlist', authenticateToken, (req, res) => {
-    console.log('I am authenticated')
-    console.log(req.user)
-    res.send({
-        items: [
-            "God Father",
-            "Titanic",
-            "Game of thrones"
-        ]
-    });
+    Wishlist.find({}, (err, wishlist) => {
+        if(err){
+            res.send(400,{
+                status: err
+            })
+        }else{
+            res.send({
+                results: wishlist
+            })
+        }
+    })
 })
+
+
 
 
 app.post('/register', (req, res) => {
