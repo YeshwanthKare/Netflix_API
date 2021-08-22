@@ -10,6 +10,8 @@ app.use(cors());
 
 app.use(express.json());
 
+app.use(express.static("public"));
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.header(
@@ -170,24 +172,12 @@ app.post("/login", (req, res) => {
         status: "valid",
         token: token,
       });
-      // console.log(user)
+      console.log("User is", user);
     } else {
       res.status(404).send("Not Found");
       console.log(err);
     }
   });
-  // const validUser = {
-  //     email: 'newmail@mail.com',
-  //     password: 'mypassword'
-  // }
-
-  // if(email == validUser.email && password == validUser.password){
-  //     res.send({
-  //         status: 'Valid'
-  //     })
-  // }else {
-  //     res.status(404).send('Not found');
-  // }
 });
 
 const PORT = process.env.PORT || 3000;
